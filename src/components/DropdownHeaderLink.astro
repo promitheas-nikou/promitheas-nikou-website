@@ -1,0 +1,101 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+
+interface DropdownItem {
+	href: string;
+	label: string;
+}
+
+interface Props extends HTMLAttributes<'a'> {
+	items?: DropdownItem[];
+}
+
+const { href, class: className, items, ...props } = Astro.props;
+
+const pathname = Astro.url.pathname.replace(import.meta.env.BASE_URL, '');
+const subpath = pathname.match(/[^\/]+/g);
+
+function isLinkActive(linkHref: string | URL | undefined) {
+	return linkHref === pathname || linkHref === '/' + pathname;//+ (subpath?.[0] || '');
+}
+
+const isActive = href === pathname || href === '/' + (subpath?.[0] || '');
+const hasDropdown = !!items?.length;
+---
+
+<div class="nav-item" class:list={[{ 'has-dropdown': hasDropdown }]}>
+	<a href={href} class:list={[className, { active: isActive }]} {...props}>
+		<slot />
+	</a>
+
+	{hasDropdown && (
+		<ul class="dropdown-menu">
+			{items!.map((item) => (
+				<li>
+					<a
+					href={item.href}
+					class:list={[className, { dropdown_active: isLinkActive(item.href) }]}
+					{...props}
+					>
+					{item.label}
+					</a>
+				</li>
+			))}
+		</ul>
+	)}
+</div>
+
+<style>
+	.nav-item {
+		position: relative;
+		display: inline-block;
+	}
+
+	a {
+		display: inline-block;
+		color: inherit;
+		text-decoration: none;
+	}
+
+	a.active {
+		font-weight: bolder;
+		text-decoration: underline;
+	}
+
+	.dropdown-menu {
+		position: absolute;
+		top: 100%;
+		left: 0;
+		margin: 0;
+		padding: 0.5rem 0;
+		min-width: 180px;
+		list-style: none;
+		display: none;
+		flex-direction: column;
+		background: white;
+		color: #1a1a1a;
+		box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+		z-index: 20;
+	}
+
+	.dropdown-menu li {
+		padding: 0;
+	}
+
+	.dropdown-menu a {
+		display: block;
+		width: 100%;
+		padding: 0.4rem 1rem;
+		color: inherit;
+		font-size: medium;
+	}
+
+	a.dropdown_active {
+		font-weight: bolder;
+	}
+
+	.nav-item.has-dropdown:hover .dropdown-menu,
+	.nav-item.has-dropdown:focus-within .dropdown-menu {
+		display: flex;
+	}
+</style>

@@ -1,0 +1,124 @@
+---
+import AboutHeroImage from '../../assets/skill-tree.png';
+import Layout from '../../layouts/BlogPost.astro';
+// Define your data directly in the frontmatter
+import CVTable from '../../components/CVTable.astro';
+const programmingSkills = [
+	{
+		type: 'Programming',
+		name: 'C',
+		subtext: 'Low Level Understanding, Security, Performance, Embedded Systems',
+		levelText: 'Expert',
+		levelPercentage: 95,
+		projects: [
+			{ name: 'E-Commerce App', url: 'https://github.com/yourusername/shop' },
+			{ name: 'Portfolio', url: '#' }
+		]
+	},
+	{
+		type: 'Programming',
+		name: 'C++',
+		subtext: 'STL, Advanced OOP, Large Project Management',
+		levelText: 'Expert',
+		levelPercentage: 95,
+		projects: [
+			{ name: 'Last Survivor (game)', url: 'https://github.com/promitheas-nikou/lastsurvivor-client' },
+		]
+	},
+	{
+		type: 'Programming',
+		name: "Lua",
+		subtext: "C API, Sandboxing, Embedded Systems",
+		levelText: 'Expert',
+		levelPercentage: 95,
+		projects: [
+		]
+	},
+	{
+		type: 'Programming',
+		name: "Python",
+		subtext: "numpy, pandas, sagemath, pytorch",
+		levelText: 'Expert',
+		levelPercentage: 90,
+		projects: [
+		]
+	},
+	{
+		type: 'Programming',
+		name: 'Java',
+		subtext: 'Performance Code, Best Practices, Android',
+		levelText: 'Advanced',
+		levelPercentage: 80,
+		projects: [
+		]
+	},
+	{
+		type: 'Programming',
+		name: 'Rust',
+		subtext: 'Basic Libraries, Core Concepts, Cargo',
+		levelText: 'Intermediate',
+		levelPercentage: 60,
+		projects: [
+			{ name: 'apollo', url: 'https://github.com/promitheas-nikou/apollo' },
+		]
+	},
+	{
+		type: 'Programming',
+		name: 'Assembly (x86/amd64)',
+		subtext: 'Hardware-specific performance optimizations, Advanced Algorithm Implementation, Programming Embedded Systems',
+		levelText: 'Competent',
+		levelPercentage: 50,
+		projects: [
+		]
+	},
+	{
+		type: 'Programming',
+		name: 'Bash/Shell',
+		subtext: 'Basic Control, Common Tools',
+		levelText: 'Intermediate',
+		levelPercentage: 40,
+		projects: [
+		]
+	},
+	{
+		type: 'Programming',
+		name: 'JavaScript/TypeScript',
+		subtext: 'Basic Understanding, Common Uses',
+		levelText: 'Beginner',
+		levelPercentage: 25,
+		projects: [
+		]
+	},
+];
+
+const ITSkills = [
+
+	{
+		type: 'IT',
+		name: 'Git/Gitlab',
+		subtext: 'Version Control, Security, Workflows, Automation, Releases',
+		levelText: 'Advanced',
+		levelPercentage: 80,
+		projects: [
+			{name: 'My GitHub', url: 'https://github.com/promitheas-nikou/' },
+		]
+	},
+]
+---
+
+<Layout
+	title="My Skills"
+	description="Lorem ipsum dolor sit amet"
+	pubDate={new Date('2026-06-23')}
+	heroImage={AboutHeroImage}
+>
+	<p>I figured I'd keep here a regularly updated list of my skills and experience over the years
+	as well as the most important projects I've worked on these last few years. If you are considering me for a
+	specific position, need support on some project and are unsure if I'm the right person for the job, or if you're
+	simply curious about something you see on this list, feel free to contact me per E-Mail or on LinkedIn to discuss
+	it further! I'm very open to work or other opportunities</p>
+	<h1>Programming</h1>
+	<CVTable skills={programmingSkills} />
+	<h1>IT/Other Skills</h1>
+	<CVTable skills={ITSkills} />
+</Layout>

@@ -1,0 +1,66 @@
+---
+title: 'Building my personal website with Astro'
+description: 'My experience creating my first website'
+pubDate: '2026-06-24'
+author: 'Promitheas Nikou'
+heroImage: '../../assets/blog-placeholder-astro.jpg'
+---
+import 'katex/dist/katex.min.css';
+import BlogSignature from '../../components/BlogSignature.astro';
+
+### Hello everyone!
+
+##### I'm very excited to share my first website with you!
+
+It has been an interesting learning experience setting this entire thing up, but I'm very excited now that it's finally up and running!
+
+I am currently planning to use this website as a personal website for my CV, my personal blog and as a hosting platform for my slides, exercises and other documents relating to the NuS ÜS.
+
+I build all the content for this site with [Astro](https://astro.build/) as a unified system for all my formatting and files.
+
+If you are interested in also creating your own website, I'm going to give you the main reasons why I chose it:
+
+### 1) Excellent Markdown AND HTML AND LaTeX support, in the same file!
+
+I understand it is not the ONLY framework that does this, but it is the one that gemini happened to recommend first 🙏
+
+In all honesty, I chose it because it seemed like a good combination between the complexity of creating new posts and pages and the features it offers. It can serve `.html`, `.md` and `.mdx` files (almost) out of the box, and I can easily add LaTeX expressions, codeboxes or arbitrary markdown components even with my limited web experience.
+
+For example, the title above was written as
+```md
+### 1) Excellent Markdown AND HTML AND LaTeX support, in the same file!
+```
+
+and if I write something like
+
+```latex
+$$
+E=mc^2
+$$
+```
+It will automatically render as:
+$$
+E=mc^2
+$$
+
+(actually it does need an import which I forgot, but now it works)
+
+### 2) Great modularity
+
+The same reason why my LaTeX occasionally breaks is the other main reason why this framework is so nice: everything is modular. In most places (including this `.mdx` file you are reading right now rendered as html) it is possible to add js code and import any additional libraries or components I want, including LaTeX, or any other thing I want, modular to my project, and seperate for each file!
+
+### 3) Reusable components
+
+The other important issue for me, was that I actually hate web design. I find it really boring to have to type the same boilerplate HTML (which I struggle to do anyway). Copy-pasting doesn't help that much either, since I regularly need to make changes to common code, such as the header, but it would be impossible to replace it when I make a change in all files in which it appears (i.e. all of them). Also including a page in another page, while possible is still pretty annoying.
+
+That's why, I instead am using `.astro` files! I can simply write any common snippets of html I use in an astro file and include it from any other file. In fact, I can even add typescript code on the astro file (that executes as part of the build process), and programmatically performs changes to the generated HTML output. This is precisely what I used to include header and footer in all pages, and also what I used to automatically generate blog post pages (including title, image, header, footer, and list of blog posts) by simply adding markdown files (with some frontmatter to declare dates and titles etc) in `/content/blogs` and have it be automatically sorted.
+
+Which actually brings me to reason #4:
+
+### 4) It is <small>(or at least it can be)</small> completely static!
+
+This was a big issue for me, since I have a personal grudge against clientside rendering websites and dynamically loading websites. What I like about Astro, is that I can easily demo my website by running `npm run dev` and have all changes automatically appear **BUT** when it comes time to publish, I can `npm run build` and have everything compile to static files!
+
+_This is also how I can get away with hosting this on GitHub, which basically only allows static sites, but I am actually able to push my entire repo there and have it build on their side. Pretty convenient_
+
+In any case though, it has been an interesting learning opportunity, and I'm glad I took the time to create something original.

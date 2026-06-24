@@ -1,0 +1,20 @@
+---
+interface Props {
+    pubDate: Date;
+    author: string;
+}
+
+import FormattedDate from './FormattedDate.astro';
+---
+<style>
+    .blog_signature {
+        text-align: center;
+        font-size: xx-large;
+        font-style: italic;
+    }
+</style>
+<p class="blog_signature">
+    Written by {Astro.props.author}
+    <br/>
+    <FormattedDate date={Astro.props.pubDate}/>
+</p>
