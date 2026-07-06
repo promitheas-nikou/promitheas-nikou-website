@@ -1,4 +1,5 @@
 ---
+import * as Images from '../images.ts';
 import { Image } from 'astro:assets';
 import { getCollection } from 'astro:content';
 import BaseHead from '../../../components/BaseHead.astro';
@@ -150,7 +151,7 @@ import { SITE_DESCRIPTION, SITE_TITLE } from '../../../consts';
     </section>
     <br/>
     <section>
-        <Image width={500} height={255} src={"/src/assets/eth-images/nus1/main.png"} alt={"Plasma Ball"}/>
+        <Image width={500} height={255} src={Images.nus1image} alt={"Plasma Ball"}/>
         <table>
             <thead>
                 <tr>
