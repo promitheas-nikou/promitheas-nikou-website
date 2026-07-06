@@ -1,0 +1,9 @@
+---
+interface Props {
+	file: string
+}
+
+const { file } = Astro.props;
+---
+
+<a href={file}>{file.split('/').at(-1)}</a>

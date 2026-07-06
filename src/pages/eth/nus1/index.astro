@@ -1,0 +1,201 @@
+---
+import { Image } from 'astro:assets';
+import { getCollection } from 'astro:content';
+import BaseHead from '../../../components/BaseHead.astro';
+import Footer from '../../../components/Footer.astro';
+import FileLink from '../../../components/FileLink.astro';
+import FormattedDate from '../../../components/FormattedDate.astro';
+import Header from '../../../components/Header.astro';
+import { SITE_DESCRIPTION, SITE_TITLE } from '../../../consts';
+interface Subject {
+    title: string,
+    semester: string,
+    img: string,
+    id: string,
+    lastUpdated: Date
+}
+
+const subjects: Subject[] = [
+    {
+        title: "NuS I",
+        semester: "Sem 1 (Herbstsemester 2026)",
+        img: "/src/assets/skill-tree.png",
+        lastUpdated: new Date("2026-07-06"),
+        id: "nus-1"
+    }
+];
+---
+
+<!doctype html>
+<html lang="en">
+<head>
+    <BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+    <style>
+        main {
+            width: 960px;
+        }
+        ul {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+        }
+        ul li {
+            width: calc(50% - 1rem);
+        }
+        ul li * {
+            text-decoration: none;
+            transition: 0.2s ease;
+        }
+        //ul li:first-child {
+        //    width: 100%;
+        //    margin-bottom: 1rem;
+        //    text-align: center;
+        //}
+        //ul li:first-child img {
+        //    width: 100%;
+        //}
+        //ul li:first-child .title {
+        //    font-size: 2.369rem;
+        //}
+        ul li img {
+            margin-bottom: 0.5rem;
+            border-radius: 12px;
+        }
+        ul li a {
+            display: block;
+        }
+        .title {
+            margin: 0;
+            color: rgb(var(--black));
+            line-height: 1;
+        }
+        .date {
+            margin: 0;
+            color: rgb(var(--gray));
+        }
+        ul li a:hover h4,
+        ul li a:hover h5,
+        ul li a:hover .date {
+            color: rgb(var(--accent));
+        }
+        ul a:hover img {
+            box-shadow: var(--box-shadow);
+        }
+        @media (max-width: 720px) {
+            ul {
+                gap: 0.5em;
+            }
+            ul li {
+                width: 100%;
+                text-align: center;
+            }
+            ul li:first-child {
+                margin-bottom: 0;
+            }
+            ul li:first-child .title {
+                font-size: 1.563em;
+            }
+        }
+        /* Container styling to ensure the table doesn't overflow */
+        table {
+            width: 100%;
+            border-collapse: collapse; /* Merges borders so you get clean, single outlines */
+            margin: 20px 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 16px;
+            text-align: left;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            border-radius: 8px;
+            overflow: hidden; /* Keeps the rounded corners clean */
+            border: 1px solid #e0e0e0;
+        }
+
+        /* Header Styling */
+        thead {
+            background-color: #e1e5ff; /* Modern blue accent */
+            color: #000000;
+            font-weight: 600;
+        }
+
+        /* Row and Cell Outlines */
+        th, td {
+            padding: 12px 16px;
+            border: 1px solid #e0e0e0; /* The outline for entries */
+            vertical-align: middle;
+        }
+
+        /* Subtle styling specifically for headers if you decide to change <td> to <th> later */
+        thead td, thead th {
+            font-weight: bold;
+            border-bottom: 2px solid #3352ce;
+        }
+
+        /* Alternating row colors for better readability */
+        tbody tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+
+        /* Hover effect to highlight the current row */
+        tbody tr:hover {
+            background-color: #f1f3f9;
+            transition: background-color 0.2s ease;
+        }
+
+        /* Styling for your custom FileLink / links inside the table */
+        table a, table td * {
+            color: #4a6cf7;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        table a:hover, table td *:hover {
+            text-decoration: underline;
+            color: #2b4cd2;
+        }
+    </style>
+</head>
+<body>
+<Header />
+<main>
+    <section>
+        <h2><a href="/eth">&lt; See all subjects</a></h2>
+        <h2>Netzwerke und Schaltunge 1<br/>Prof. Christian Franck</h2>
+        <h4>D-ITET Sem 1 (Herbstsemester 2026)</h4>
+    </section>
+    <br/>
+    <section>
+        <Image  width={500} height={255} src="/src/assets/eth-images/nus1/sample1.png" alt="Plasma Ball"/>
+        <table>
+            <thead>
+                <tr>
+                    <th>Week</th>
+                    <th>Slides</th>
+                    <th>Documents</th>
+                </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>Week 1</td>
+                <td><FileLink file="/eth/nus1/nus1-slides-1"/></td>
+                <td><FileLink file="/eth/nus1/nus1-notes-1"/><br/><FileLink file="/eth/nus1/nus1-bonus-1"/></td>
+            </tr>
+            <tr>
+                <td>Week 2</td>
+                <td><FileLink file="/eth/nus1/nus1-slides-2"/></td>
+                <td><FileLink file="/eth/nus1/nus1-notes-2"/><br/><FileLink file="/eth/nus1/nus1-bonus-2"/></td>
+            </tr>
+            <tr>
+                <td>Week 3</td>
+                <td><FileLink file="/eth/nus1/nus1-slides-3"/></td>
+                <td><FileLink file="/eth/nus1/nus1-notes-3"/><br/><FileLink file="/eth/nus1/nus1-bonus-3"/></td>
+            </tr>
+            </tbody>
+        </table>
+    </section>
+</main>
+<Footer />
+</body>
+</html>

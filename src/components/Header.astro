@@ -2,9 +2,14 @@
 import { SITE_TITLE } from '../consts';
 import HeaderLink from './HeaderLink.astro';
 import NavLink from './DropdownHeaderLink.astro';
-const items = [
+const experience = [
 	{href: "/experience", label: "Experience"},
-	{href: "/experience/skills", label: "Skills"}];
+	{href: "/experience/skills", label: "Skills"}
+];
+const eth = [
+	{href: "/eth", label: "ETH Home"},
+	{href: "/eth/nus1", label: "NuS I"}
+];
 ---
 
 <header>
@@ -14,7 +19,8 @@ const items = [
 			<HeaderLink href="/">Home</HeaderLink>
 			<HeaderLink href="/blog">Blog</HeaderLink>
 			<HeaderLink href="/about">About</HeaderLink>
-			<NavLink href="/experience" items={items}>Experience</NavLink>
+			<NavLink href="/experience" items={experience}>Experience</NavLink>
+			<NavLink href="/eth" items={eth}>ETH</NavLink>
 		</div>
 		<div class="social-links">
 			<a href="https://github.com/promitheas-nikou" target="_blank">
