@@ -7,23 +7,6 @@ import FileLink from '../../../components/FileLink.astro';
 import FormattedDate from '../../../components/FormattedDate.astro';
 import Header from '../../../components/Header.astro';
 import { SITE_DESCRIPTION, SITE_TITLE } from '../../../consts';
-interface Subject {
-    title: string,
-    semester: string,
-    img: string,
-    id: string,
-    lastUpdated: Date
-}
-
-const subjects: Subject[] = [
-    {
-        title: "NuS I",
-        semester: "Sem 1 (Herbstsemester 2026)",
-        img: "/src/assets/skill-tree.png",
-        lastUpdated: new Date("2026-07-06"),
-        id: "nus-1"
-    }
-];
 ---
 
 <!doctype html>
@@ -167,7 +150,7 @@ const subjects: Subject[] = [
     </section>
     <br/>
     <section>
-        <Image  width={500} height={255} src={"/src/assets/eth-images/nus1/sample1.png"} alt={"Plasma Ball"}/>
+        <Image width={500} height={255} src={"/src/assets/eth-images/nus1/main.png"} alt={"Plasma Ball"}/>
         <table>
             <thead>
                 <tr>
