@@ -8,7 +8,7 @@ import rehypeKatex from 'rehype-katex';
 
 // https://astro.build/config
 export default defineConfig({
-	site: 'http://promitheas-nikou.telehorizon.com',
+	site: 'https://promitheas-nikou.me',
 	integrations: [mdx(), sitemap()],
 	fonts: [
 		{
