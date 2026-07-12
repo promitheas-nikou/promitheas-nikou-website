@@ -12,11 +12,20 @@ interface Props extends HTMLAttributes<'a'> {
 
 const { href, class: className, items, ...props } = Astro.props;
 
-const pathname = Astro.url.pathname.replace(import.meta.env.BASE_URL, '');
+function stripPath(path: string) {
+	return path.replace(/^\/+|\/+$/g, '');
+}
+
+const pathname = stripPath(Astro.url.pathname.replace(import.meta.env.BASE_URL, ''));
 const subpath = pathname.match(/[^\/]+/g);
 
 function isLinkActive(linkHref: string | URL | undefined) {
-	return linkHref === pathname || linkHref === '/' + pathname;//+ (subpath?.[0] || '');
+	if (linkHref === undefined)
+		return false;
+	if (linkHref instanceof URL)
+		linkHref = linkHref.pathname;
+	const stripped = stripPath(linkHref);
+	return stripped == pathname;
 }
 
 const isActive = href === pathname || href === '/' + (subpath?.[0] || '');
