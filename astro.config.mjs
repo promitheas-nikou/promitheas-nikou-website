@@ -42,8 +42,8 @@ export default defineConfig({
       remarkPlugins: [remarkMath],
       rehypePlugins: [rehypeKatex],
 	},
-  //
-  // adapter: cloudflare({
-	//   imageService: "compile"
-  // }),
+
+  adapter: cloudflare({
+	  imageService: "compile"
+  }),
 });
