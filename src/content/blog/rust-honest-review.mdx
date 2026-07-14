@@ -1,0 +1,61 @@
+---
+title: 'An honest review of Rust'
+description: 'My personal experience with Rust and its ecosystem'
+pubDate: '2026-07-14'
+author: 'Promitheas Nikou'
+heroImage: '../../assets/rust-language-image.png'
+---
+import 'katex/dist/katex.min.css';
+
+After strong recommendations from some passionate rust supporters, I decided to give Rust a try, an I'd like to share my experience with it.
+
+I had previously interacted with the language a little bit and also read through the documentation and the philosophy behind the design choices for the language.
+Honestly from a features standpoint, it isn't that bad, given that "as a C replacement" it has everything you'd need:
+- Manual arrays, slices, and convenient secure memory management
+- Compiler enforced memory safety
+- Reasonable generics without bloated C++ template syntax
+- Great standard library and package manager
+- High level constructs that dissolve to low level operations at _compile time_
+
+I decided to reimplement a tool I had previously written in Python to sort and organize my music library: [apollo](https://github.com/promitheas-nikou/apollo). It was a good starting project because it would force me to learn good practices for filesystem operations, sorting, handling reasonably sized data structures and parallelism.
+
+From the beginning I decided I'd try to translate the file from Python to Rust, while maintaining the overall structure.
+
+This was actually way easier than I thought, since the language and standard libraries are so comprehensive and so intuitive, that even things like list comprehensions in python can be written in rust with native performance without having to manually write for-loops each time.
+For example, the following is a snippet from my rewritten code:
+```rust
+conf.dir_tasks.iter().for_each(|task| {
+    if !process_dir_task(&task, &conf) {
+        errors += 1;
+    }
+});
+```
+
+This code uses _iterators_ using `.iter()` and then a folds the list with `.for_each()` which takes in an lambda, known as an inline closure in Rust. This code compiles to the exact same machine code as a for loop (you can check it yourself on [godbolt.org](godbolt.org), but is much easier to write, debug, and reads like natural language!
+
+One other amazing thing, is that using _cargo_ I could simply include dependencies as the package names in `cargo.toml`, and even more amazingly, there are very standardized libraries for almost everything, and with 0 experience with cargo and no idea how the package system worked, I was able to import an mp3 tag parser library (`id3`) in less than 2 minutes.
+```toml
+[dependencies]
+log="0.4"
+regex = "1.12.4"
+id3 = "1.17.0"
+```
+
+Unfortunately though, sacrifices have been made in order to get these features:
+
+Rust is very strongly statically typed, where all types are _immutable_ by default, and paradoxically has both implicit typing AND requires explicit declarations for references.
+This is of course necessary for the 'absolute memory safety' it aims for, but is still quite a hassle to deal with, as you can see in the following snippet:
+```rust
+let playlist_name = conf.input_directory
+.file_name().unwrap().to_str()
+.unwrap_or("Unknown Playlist");
+```
+And even this verbose code is still technically 'unsafe' since I'm calling `.unwrap()` which basically asserts that 'it is not `None`', but since I'm dealing with actual files on my disk, I fail to see how I could misconfigure my filesystem bad enough for this code to fail.
+
+One more complaint I have for the language, is that while claiming to be a "memory safe C replacement", it is not quite as low level as it claims.
+For 'polymorphism' or simply more dynamic data, it is often necessary to assume that the object is in a valid state and immediately start reading data in memory based on it. In rust however this is essentially not allowed (blindly), so if you _tried_ to do it, the compiler would sneakily add a bunch of assertions hidden between memory accesses (yes I checked the assembly), which is _possibly okay_ in a normal codebase, but definitely noticable in a bare metal or high performance snippet of code.
+
+So in scenarios like these, that violate the whole memory safe philosophy, you'd either be forced to write an enormous convoluted metatemplate to somehow convince the rust compiler that this is indeeed memory safe, or you would give up and wrap the whole thing in an `unsafe{}` block (which essentially means 'treat this as C code, do no memory checking').
+
+So in my experience, I really don't think Rust is the way to go as a C replacement. What it instead should do, is replace most python and C++ codebases, that are designed as such only for convenience.
+When it's just as easy to write Rust code as it is Python code, with a 50x instant performance boost in doing so, and no sacrifice in library availability, it no longer makes sense to design and maintain huge bloated Python tools that will break at the very next pip update.
