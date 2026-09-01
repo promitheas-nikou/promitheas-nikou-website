@@ -1,9 +1,12 @@
 ---
 interface Props {
-	file: string
+	file: string,
+    download_as: string,
+    label?: string
 }
 
-const { file } = Astro.props;
+const { file, download_as, label } = Astro.props;
+let display_label = label ?? download_as;
 ---
 
-<a href={file}>{file.split('/').at(-1)}</a>
+<a href={`${file}?filename=${download_as}`}>{display_label}</a>
