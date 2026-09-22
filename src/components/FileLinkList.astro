@@ -1,0 +1,21 @@
+---
+import FileLink from './FileLink.astro';
+interface Props {
+	file_stub: string,
+    download_as_stub: string,
+    label?: string,
+    types: string
+}
+
+const { file_stub, download_as_stub, label, types } = Astro.props;
+const types_list = types.split(',').map(t => t.trim());
+let display_label = label ?? download_as_stub;
+---
+
+<p>{display_label}: {types_list.map((t, i) =>
+    <>
+    <FileLink download_as={`${download_as_stub}.${t}`} file={`${file_stub}.${t}`} label={t.toUpperCase()}/>{i < types_list.length - 1 && ", "}
+    </>
+)}</p>
+
+
