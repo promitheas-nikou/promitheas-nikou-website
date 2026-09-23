@@ -61,7 +61,8 @@ const { title, description, pubDate, author, updatedDate, heroImage } = Astro.pr
 		<main>
 			<article>
 				<div class="hero-image">
-					{heroImage && <Image width={1020} height={510} src={heroImage} alt="" />}
+					<!--width={1020} height={510}-->
+					{heroImage && <Image style="width: 1020px; width: 510px"  src={heroImage} alt="" />}
 				</div>
 				<div class="prose">
 					<div class="title">
