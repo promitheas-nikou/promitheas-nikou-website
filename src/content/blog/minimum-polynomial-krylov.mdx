@@ -1,0 +1,61 @@
+---
+title: 'Minimal polynomial are kinda cool'
+description: "Why I stopped hating on minpoly and why it's actually really useful"
+pubDate: '2026-10-20'
+author: 'Promitheas Nikou'
+heroImage: '../../assets/maths-generic-image.png'
+---
+import 'katex/dist/katex.min.css';
+
+Today I was trying to solve [Matrix Revolution](https://cryptohack.org/challenges/diffie-hellman/) on cryptohack the other day and I ended up getting stuck in a rabbit hole that was apparently not the intended (or at least most common) solution. However, after a few hours of messing around with sage modules, I actually got it to work and it surprisingly computed the answer very quickly. The method I used was basically logarithm of polynomials in finite fields modulo other polynomials, based, however, not on the characteristic polynomial as was commonly done, but instead on its minimal polynomial.
+
+I will, of course, not spoil the solution here. However, I will explain the theory and the idea behind it because I think it's quite fascinating and I was really excited when I managed to wrap my head around it.
+
+## What is a minimal polynomial?
+
+The concept is a little confusing, or at least it confused me when I first saw it, because it is a different _kind_ of polynomial than the characteristic polynomial. Now of course they are both abstract polynomials for any linear element for which addition and multiplication is defined, yes, but the charpoly is about scalars, while the minpoly is about the matrix itself. More specifically:
+
+* The **characteristic polynomial** of a square matrix $A$ is the polynomial $ det(A-xI) $ with the parameter $x$ being a scalar, and the determinant being an operator that transforms it into a polynomial with respect to $x$. Perfectly normal and well-defined.
+
+* The **minimal polynomial** of a square matrix $A$, on the other hand, is: "The monic (highest degree term must be 1) polynomial $P$ of least (hence minimal) degree such that $P(A)=0$". Note that here, the polynomial acts on the matrix $A$ itself, and the product is not the scalar 0, but the null matrix!
+
+This was already quite confusing for me as I had not considered the possibility of transforming matrices in this way, and it also wasn't obvious why it would be useful in any way. Naturally, however, I figured there was no reason why it couldn't be defined, since multiplication and addition for matrices is defined perfectly well, and clearly matrices also form a vectorspace of dimension NxN, so its after raising the matrix to all power from 1 to N^2 we were bound to span the whole vectorspace and so there must necessarily exists a polynomial of degree N^2 that annihilates any matrix, simply because the span of the matrices A^0 through A^(N*N-1) is guaranteed to include $A^(N^2)$ since there are only $ N \times N $ dimensions.
+
+However, if you were to plug in any matrix into sage right now and try
+```py
+m = Matrix([[2,3,5,1],[3,2,1,5],[2,1,4,5],[7,6,7,6]]) #or any random matrix
+print(m.minimal_polynomial())
+```
+
+You would in fact get a polynomial like this:
+
+```py
+x^4 - 14*x^3 - 24*x^2 + 6*x + 87
+```
+
+This came as a surprise to me, it was highly unlikely that of all the matrices in the NxN space I'd land on one that has a minpoly of degree of only 4 instead of 16. You can try this yourself with any matrix of any (square) size in any field or ring you like, you will not see a polynomial of degree more than n. To see why that is we have to learn about yet another fascinating idea very closely related to this and very closely related to matrix polynomials: the Krylov Basis.
+
+## What is a Krylov basis?
+
+The concept comes from matrix orbits. What happens if we keep applying a matrix on a vector over and over again? Applying any nxn matrix on an n-size (column) vector produces another n-size (column) vector. However, the vectorspace of possible vector has dimension n, so after starting with v, compute $Av$, then $AAv=A^2 v$, then $AAAv=A^3 v$, after at most n steps we must find a vector that is a linear combination of the previous ones. The vectors computed in this way are called "*the Krylov basis* of $v$ with respect to $A$" and if we express the first vector that is a linear combination of the previous ones, $(A^d)v=c_0 v + c_1 A^1 v + ... + c_{d-1} A^{d-1}$, then we get "the minimal polynomial of $v$ with respect to $A$", or "the $A$-annihilator of $v$". It's important to note at this point, this is a polynomial with respect to **$A$** (not $v$ since that can't be multiplied by itself), and that this polynomial will clearly be of some degree $d < n$ since the vectorspace of $v$, the target vector, has dimension n.
+
+This here should begin to make us suspicious about our original question, about the order of the minpoly of the entire matrix A. With the concept of a krylov basis now in our toolset, we can begin to construct a proof to show that the degree of the minpoly *must* be at most n.
+
+## Proving the bound of the degree of the minimal polynomial
+
+We remember from our fundamentals of linear algebra, that $dim(Ker(A)) + dim(Im(A)) = n$, meaning the sum of the dimensions of the kernel and of the image of A must always be n, the dimension of the entire space. This means that if we can demonstrate that the kernel of a matrix has dimension n, then that forces its image to have a dimension of 0, thus the matrix converts every vector into the null vector, and that matrix can only possibly be the null matrix. And it turns out this is all we need to prove the n bound.
+
+We want to prove that for any given $n \times n$ matrix $A$ there exists a polynomial $P$ of degree at most $n$ such that $P(A)=0$ (the null matrix).
+
+1) Start by picking any arbitrary non-zero vector, and compute its Krylov basis with respect to $A$. Let $w_0=v_i, w_1=Av_i, ..., w_{d-1}=A^{d_1-1}v_i$ be the vectors of the basis, and let $K_1 = span\{w_i\}$ be the span of the krylov basis.
+2) As we identified earlier, we need no $w_{d_1}=A^{d_1} v_i$ since it can be expressed as a linear combination of $w_0, ..., w_{d_1-1}$, let $m_{v_1}(x)$ be that linear combination, which is the monic polynomial of degree $d_1$ such that $m_{v_1}(A)v_1=0$. Because, however, the term $m_{v_1}(A)$ is a linear combination of $A$ with itself, it commutes with A. Therefore $m_{v_1}(A) A^k v_1 = A^k (m_{v_1}(A) v_1) = A^k 0 = 0$ for *ANY* natural k, so not only does $m_{v_1}(A)$ annihilate $v_1$, it also annihilates *EVERY* element of $K_i$.
+3) We have now constructed a polynomial $P_1 = m_{v_1}(x)$ such that the kernel of $P_1(A)$ is $K_1$ and has dimension d. If $d=n$ our work is done. Otherwise we repeat the same process again. Pick a new vector, $v_2 \notin K_1$, and repeat the same process, producing a $K_2$ and a $m_{v_2}$ of degree $d_2$, except this time, we will stop if the new vector $A^k v_2$ is linearly dependent on the previous vectors modulo $K_1$. That means we will stop when $A^{d_2}v_2 \in span{A^0 v_2, ..., A^{d_2 -1}v_2} + K_1$The reason for this is that applying $P_2 = m_{v_2}$ on a vector of $K_2$ will be sure to either annihilate it or drop it in $K_1$ in which case we can be sure $P_1$ would annihilate. That means that with $P_1(A)P_2(A)$ which has degree $d_1+d_2$ we are guaranteed to annihilate any vector in $K_1 + K_2$ ($p_1$ annihilates all vectors in $K_1$ and $K_2$ does nothing in that case, and otherwise $P_2(A)v_2$ would be part of $K_1$ and then $P_1(A)(P_2(A)v_2)=0$).
+4) We repeat the process picking new linearly independent vectors until we run out. We are guaranteed to finish after at most $n$ iterations of the above process since each time $d_i$ is at least 1, and by the end $\sum d_i \le n$, and $\sum K_i = \Omega$ (the entire vectorspace).
+5) Therefore we have a series of $k$ polynomials $P_i$ of degrees $d_i$ each with $\sum d_i \le n$ such that each $P_i$ either annihilates the vectors of $K_i$ or it drops them into $K_{i-1}$, and finally $P_1$ is guaranteed to annihilate all vectors that end up in $K_1$. Therefore by computing the product of these polynomials, $P(x)=\Pi P_i(x)$ we will get the polynomial $P(x)$ of degree $\sum d_i \le n$, that is guaranteed to have a kernel of size $n$, because we exhausted all possible vectors in step 4.
+6) Since the kernel of $P(A)$ MUST have dimension $n$ that can only mean that $P(A)$ is precisely the null matrix.
+
+Of course I could write this proof in a stricter and more formal manner, but this proof is mostly meant to help readers understand the idea behind it, and it has been formally proven many times before, so my sloppy proof would contribute little. Some parts are indeed ambiguous, namely the $\sum d_i \le n$ since one might hastily instead wish to write $=n$ which might actually not be true in edge cases with defective matrices, or in cases where the eigenvalues or eigenvectors do not exist in the field in question. Nevertheless the idea behind it is true and very much useful in providing a bound for computation time (at most $n$ steps which are at most as slow as gauss which is $O(n^3)$), showing that indeed the minimal polynomial is indeed "easily" computable.
+
+It is worth noting at this point, that everything mentioned in this article made no assumption that the matrix would need to have real elements. This theory is just as applicable to any other field, most notably finite fields modulo prime numbers. I of course intentionally avoided mentioning this to not spoil the solution to the Matrix Revolutions, the problem that motivated me to write this.
+
+For anyone interested in solving the cryptohack problem in this way I have just one hint as a reward for reading all the way through: in sage computing discrete log of a polynomial in the finite field of polynomials modulo another polynomial is surprisingly fast, fast enough to solve this challenge that has N=150 in under 5 seconds on a normal cpu. Just make sure to use `.log()` instead of `discrete_log()` since that is the baby step, giant step fallback function that is too slow for this application.
