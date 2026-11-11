@@ -7,7 +7,7 @@ heroImage: '../../assets/maths-generic-image.png'
 ---
 import 'katex/dist/katex.min.css';
 
-Today I was trying to solve [Matrix Revolution](https://cryptohack.org/challenges/diffie-hellman/) on cryptohack the other day and I ended up getting stuck in a rabbit hole that was apparently not the intended (or at least most common) solution. However, after a few hours of messing around with sage modules, I actually got it to work and it surprisingly computed the answer very quickly. The method I used was basically logarithm of polynomials in finite fields modulo other polynomials, based, however, not on the characteristic polynomial as was commonly done, but instead on its minimal polynomial.
+Today I was trying to solve [Matrix Revolution](https://cryptohack.org/challenges/diffie-hellman/) on cryptohack and I ended up getting stuck in a rabbit hole that was apparently not the intended (or at least most common) solution. However, after a few hours of messing around with sage modules, I actually got it to work and it surprisingly computed the answer very quickly. The method I used was basically logarithm of polynomials in finite fields modulo other polynomials, based, however, not on the characteristic polynomial as was commonly done, but instead on its minimal polynomial.
 
 I will, of course, not spoil the solution here. However, I will explain the theory and the idea behind it because I think it's quite fascinating and I was really excited when I managed to wrap my head around it.
 
